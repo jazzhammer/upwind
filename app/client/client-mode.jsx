@@ -1,5 +1,6 @@
-import Doc from "@/app/doc/doc";
-import Devices from "@/app/device/devices";
+'use client'
+import Doc from "/app/doc/doc.mdx";
+import Devices from "/app/device/devices";
 
 export default function ClientMode({mode}) {
   return (

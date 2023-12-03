@@ -1,7 +1,7 @@
 'use client'
-import Menu from "@/app/menu/menu";
 import {useState} from "react";
-import ClientMode from "@/app/client/client-mode";
+import Menu from "/app/menu/menu";
+import ClientMode from "/app/client/client-mode";
 
 export default function Home() {
   const [mode, setMode] = useState();
