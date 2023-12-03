@@ -1,6 +1,6 @@
 export default function Doc() {
     return (
-        <div></div>
+        <div className={"text-xs"}>doc</div>
     );
 }
 

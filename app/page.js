@@ -1,9 +1,20 @@
 'use client'
+import Menu from "@/app/menu/menu";
+import {useState} from "react";
+import ClientMode from "@/app/client/client-mode";
+
 export default function Home() {
+  const [mode, setMode] = useState();
+  const onMenuItem = (next) => {
+    setMode(next);
+  }
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <div className="z-10 max-w-5xl w-full items-center justify-between font-mono text-sm lg:flex">
-          <Menu></Menu>
+    <main className="flex flex-col justify-between p-8">
+      <div className="w-full font-mono text-xs h-4 bg-red">
+          <Menu onMenuItem={onMenuItem}></Menu>
+      </div>
+      <div className={"w-full h-full"}>
+        <ClientMode mode={mode}></ClientMode>
       </div>
     </main>
   )
