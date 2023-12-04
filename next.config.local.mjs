@@ -1,12 +1,13 @@
 /** @type {import('next').NextConfig} */
 
 import nextMdx from '@next/mdx';
+
 const nextConfig = {
   pageExtensions: ['js', 'jsx', 'mdx', 'ts', 'tsx'],
   swcMinify: true,
   reactStrictMode: false,
   output: 'export',
-  basePath: '/upwind'
+  // basePath: '/upwind'
 }
 
 const  withMDX = nextMdx({

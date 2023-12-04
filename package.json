@@ -3,8 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
+    "dev": "cp -f next.config.local.mjs next.config.mjs & ./compose-mdx & next dev",
+    "build": "cp -f next.config.prod.mjs next.config.mjs & ./compose-mdx & next build",
+    "stage": "cp -f next.config.prod.mjs next.config.mjs & next build",
     "start": "next start",
     "lint": "next lint"
   },

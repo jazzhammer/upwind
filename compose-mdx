@@ -1,0 +1,6 @@
+README=README.md
+DOC_MDX=./app/doc/doc.mdx
+
+cat "$README" > "$DOC_MDX"
+echo "\n" >> "$DOC_MDX"
+echo "export default ({ children }) => <div className={'prose lg:prose-xl'}>{children}</div>;" >> "$DOC_MDX"

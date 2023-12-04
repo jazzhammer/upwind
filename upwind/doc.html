@@ -1,0 +1,153 @@
+<!DOCTYPE html><html lang="en"><head><meta charSet="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="preload" href="/upwind/_next/static/media/c9a5bc6a7c948fb0-s.p.woff2" as="font" crossorigin="" type="font/woff2"/><link rel="stylesheet" href="/upwind/_next/static/css/4eea19fb59ca6b5c.css" crossorigin="" data-precedence="next"/><link rel="preload" as="script" fetchPriority="low" href="/upwind/_next/static/chunks/webpack-a5f07ddfe5164240.js" crossorigin=""/><script src="/upwind/_next/static/chunks/fd9d1056-4b2c3529c0a2f3c1.js" async="" crossorigin=""></script><script src="/upwind/_next/static/chunks/472-92d3b582bac9019a.js" async="" crossorigin=""></script><script src="/upwind/_next/static/chunks/main-app-d9aa564e056fe635.js" async="" crossorigin=""></script><script src="/upwind/_next/static/chunks/687-2f5dcb2a2f7cc7ae.js" async=""></script><script src="/upwind/_next/static/chunks/app/doc/page-824da7aed33a444f.js" async=""></script><title>upwind</title><meta name="description" content="stove venting automation"/><link rel="icon" href="/upwind/favicon.ico" type="image/x-icon" sizes="16x16"/><meta name="next-size-adjust"/><script src="/upwind/_next/static/chunks/polyfills-c67a75d1b6f99dc8.js" crossorigin="" noModule=""></script></head><body class="__className_ac7b32"><div><div class="prose lg:prose-xl"><h1>introduction</h1>
+<p>this <strong>UPWIND</strong> nextjs project is the web application portion of this project:</p>
+<a href="https://miro.com/app/board/uXjVMIfn57A=/?moveToWidget=3458764571933452150&amp;cot=14">UPWIND-miroboard</a>
+<p>whose objective is to regulate airflow in the exhaust pipe of a wood-burning stove.</p>
+<h2>requirements</h2>
+<h3>about woodburning stoves</h3>
+<p>when wood burns, there is some smoke.  if wood is burning efficiently, the smoke is minimized because a large component
+of smoke from a fire is incompletely combusted carbon.
+the phases of a fire&#x27;s life cycle when smoke is more likely generated are:</p>
+<ul>
+<li><strong>at the start</strong>, when the temperature is <strong>INcreasing</strong> from ambient to maximal fire temperature ( wood begins to combust at
+300C and it generates smoke as it approaches this temperature) and</li>
+<li><strong>at the end</strong>, when the temperature is <strong>DEcreasing</strong> from maximal temperature to ambient</li>
+</ul>
+<p>if a woodburning stove is outdoors, there is plenty of space for the smoke to drift- or be blown away without bothering anyone.</p>
+<p>if the stove is <strong>indoors</strong>, we make special efforts to get the smoke to go outside and this is most important during
+the smokiest phases of the fire.  the flue of the stove is the pipe that conducts smoke from the stove&#x27;s firebox
+outside.  often, this pipe leads fire-exhaust outside along the shortest route possible. in the case that has inspired
+this project, the pipe leads to a chimney that travels vertically for 40+ft.  and that&#x27;s where the problems start.</p>
+<h3>about OUR woodburning stove</h3>
+<p>we burn wood to heat the house. we heat the house when the weather is cold.  the chimney from our stove is filled with
+cold air when there is no fire in the stove. with no fire, the air in the house is warmer than any of the air in the chimney
+and stove.  if the pipe lead quickly out of the house, this difference wouldn&#x27;t be an issue. but we have a 40+ft column
+of cold dense air that pushes its way into the stove and therefore into the house when the stove door is open: the less
+dense warmer air in the house can&#x27;t resist the head pressure of 40+ft of heavier air.  this air is especially cold in
+our case because the chimney is installed OUTSIDE the house.  yes, this is dumb. aside from the smoke-issue it causes
+that is described here, we don&#x27;t benefit from a warm chimney inside the house.  instead, all the heat that reaches the
+chimney is unfortunately lost to the great outdoors.</p>
+<p>the temperature difference means that when we start a fire and when the fire is allowed to die, there is net pressure
+INTO the house and that pressure carries with it any smoke that the fire is producing... and it&#x27;s a LOT of smoke, my
+friend.</p>
+<h3>the objective</h3>
+<p>the UPWIND project&#x27;s objective is to automate the operation of a fan to blow air up the flue when the temperature
+difference between the stove&#x27;s firebox and the air in the chimney would produce net pressure into the house.</p>
+<h3>methodology</h3>
+<ul>
+<li>
+<p><strong>sensing net pressure</strong></p>
+<p>the difference in pressure between the chimney column and the firebox is complicated by the fact that together, they
+are a dynamic, open system.  however, even if they were 2 closed, static systems, the pressure difference is slight.
+this is one of those situations where a small difference is negligible in an industrial setting, but causes big
+problems in a much smaller, domestic setting:  humans can&#x27;t breathe well in a house full of smoke.</p>
+<p>so,  we don&#x27;t have access to measurements of a pressure-difference. buuuuuut:</p>
+</li>
+<li>
+<p><strong>sensing temperature</strong></p>
+<p>we <strong>DO</strong> have access to temperature measurements. and we don&#x27;t have to measure the difference between chimney air
+and firebox air.  we could do that, of course, but we don&#x27;t have to.  it&#x27;s enough to know if the temperature in the firebox
+is less than 300C: ie. the temperature at which:</p>
+<ul>
+<li>wood catches fire, and</li>
+<li>we&#x27;re pretty confident that:<!-- -->
+<ul>
+<li>the fire&#x27;s efficiency is producing a minimum of smoke, maybe even none and</li>
+<li>there is enough pressure from hot exhaust that net pressure of the air column is UP the chimney, rather than DOWN</li>
+</ul>
+</li>
+</ul>
+<p>and of course we care about this temperature if there is some kind of fire in the firebox.  in the warmer months, we&#x27;re
+not trying to keep a fire going in the firebox, so UPWIND would not care at that time, and would then not be running.</p>
+<p><strong>the fan</strong></p>
+<p>if we want to prevent a smoke-filled house, we want to combat the down-draft from the chimney.  typically, we use fans to move
+air and that&#x27;s why we&#x27;re using one in this project. it has to be stronger than the typical down-draft pressure.  again,
+this is not a hurricane-force wind.  even a small pressure difference pushes enough smoke into our house that life is
+miserable until we can blow all the smoke out of the house with every door and window open.  this is not a comfortable
+option when the weather is cold enough for us to want to operate the stove.</p>
+<p>we don&#x27;t need a hurricane-force fan.
+the fan we&#x27;re using pushes 350cuft/min. with its outflow pointed up the chimney, it will be enough to combat the down-draft
+while a fire in the firebox is operating at &lt; 300C. when installed properly, the fan will drive air up the chimney and
+a suction force will pull air up from the firebox, so any smoke in the firebox will be sucked up through the chimney
+rather than being blown into the house.</p>
+<p><strong>automation</strong></p>
+<p>we&#x27;re connecting the temperature sensor( a type-k thermocouple installed to probe the air in the flue just above the
+firebox) to a microcontroller that will run the logic that operates the fan as a function of temperature.  there are
+many options for microcontrollers.  we&#x27;re big fans of python as a programming language, which many DIYers have had
+great success with, using pyBoards.  However, pyBoards are pretty pricey for many reasons. for our consideration,
+one could say that we would get what we pay for: python is awesome and would give us a great depth of functionality,
+but we don&#x27;t need that much depth for this implementation, so we should probably invest that awe$omene$$ where we
+really need it: in some other project. maybe in the mill-house to automate the milling of a 16ft tree trunk.<br/>
+<!-- -->raspberry pi is another option, and is cheaper than a pyBoard, but it&#x27;s also overkill.  we don&#x27;t need
+a full blown multithreaded operating system and all the hardware facilities that come with a complete PC for this
+project. we&#x27;re going to keep it simple: instead of a pyBoard or RPi, we&#x27;ll be using an arduino.</p>
+<p>there&#x27;s plenty of info on the interwebs about arduinos. we won&#x27;t rehash it here. we WILL talk about the controller-component
+connections though:</p>
+<ul>
+<li><strong>thermocouple</strong></li>
+</ul>
+<p>this is a bimetal thermometer whose electrical resistance varies as a function of temperature.  there are many types of
+thermocouples.  one of the most important dimensions in which they differ is the range of temperatures where they
+provide the most useful information, ie.  the temperature range throughout which electrical resistance is easily
+measured and varies enough that we have sufficiently granular resolution of temperature values.  we&#x27;re using a type
+K thermocouple that just happens to give us sufficient sensitivity and accuracy around the 300C mark. it&#x27;s actually
+good for temperatures down to -200C and up past 800C, so it&#x27;s useful for probably some industrial purposes in
+addition to our relatively low-range + small-temperature-interval purposes.  it&#x27;s definitely good enough for us.</p>
+<ul>
+<li><strong>thermocouple breakout board</strong></li>
+</ul>
+<p>breakout boards &quot;break-out&quot; a specific function and provide it to a general microcontroller such as our arduino.</p>
+<p>there are countless breakout boards for arduino.  the one we&#x27;re using in this project is a MAX31855 for K-type
+thermocouples.  the function it provides is serialized temperature readings.  ie. when it is powered up, it transmits
+temperature values at a regular interval from the thermocouple.</p>
+<ul>
+<li><strong>arduino 2560, with WiFi</strong></li>
+</ul>
+<p>this board is pretty handy: it has all the pinouts for connecting to the thermocouple breakout, the relay(s) to
+control the fan motor and we&#x27;ll be able to add a layer of monitoring to the system through a websocket we can
+connect via WiFi.</p>
+<p>the automation logic will be simple for now:</p>
+<ul>
+<li>UPWIND is OFF:<!-- -->
+<ul>
+<li>no automation, fan motor is OFF</li>
+</ul>
+</li>
+<li>UPWIND is ON:<!-- -->
+<ul>
+<li>monitor temperature(T):<!-- -->
+<ul>
+<li>if T &lt; 320C ( will need to watch if this is the right threshold ): =&gt; fan motor ON</li>
+<li>if T &gt;= 320C =&gt; fan motor OFF</li>
+</ul>
+</li>
+<li>the LCD will display the following:<!-- -->
+<ul>
+<li>current temperature (C)</li>
+<li>current fan motor (ON/OFF)</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2>system operation:</h2>
+<p>at any time there is any fire in the firebox, ie. from the moment a fire is started to the moment the fire is
+extinguished, UPWIND must be ON.  otherwise it should be turned off.</p>
+<h2>components:</h2>
+<ul>
+<li>hardware<!-- -->
+<ul>
+<li>fan motor</li>
+<li>thermocouple</li>
+</ul>
+</li>
+<li>lcd</li>
+<li>arduino 2560</li>
+<li>upwind web ( nextjs)<!-- -->
+<ul>
+<li>front end is reactjs, around which nextjs is built</li>
+<li>backend is python: fastapi</li>
+</ul>
+</li>
+</ul></div></div><script src="/upwind/_next/static/chunks/webpack-a5f07ddfe5164240.js" crossorigin="" async=""></script><script>(self.__next_f=self.__next_f||[]).push([0]);self.__next_f.push([2,null])</script><script>self.__next_f.push([1,"1:HL[\"/upwind/_next/static/media/c9a5bc6a7c948fb0-s.p.woff2\",\"font\",{\"crossOrigin\":\"\",\"type\":\"font/woff2\"}]\n2:HL[\"/upwind/_next/static/css/4eea19fb59ca6b5c.css\",\"style\",{\"crossOrigin\":\"\"}]\n0:\"$L3\"\n"])</script><script>self.__next_f.push([1,"4:I[3728,[],\"\"]\n6:I[9928,[],\"\"]\n7:I[6954,[],\"\"]\n8:I[7264,[],\"\"]\na:I[8297,[],\"\"]\nb:I[8869,[\"687\",\"static/chunks/687-2f5dcb2a2f7cc7ae.js\",\"385\",\"static/chunks/app/doc/page-824da7aed33a444f.js\"],\"\"]\n"])</script><script>self.__next_f.push([1,"3:[[[\"$\",\"link\",\"0\",{\"rel\":\"stylesheet\",\"href\":\"/upwind/_next/static/css/4eea19fb59ca6b5c.css\",\"precedence\":\"next\",\"crossOrigin\":\"\"}]],[\"$\",\"$L4\",null,{\"buildId\":\"aVCw0gbsrV3X0632K1TcO\",\"assetPrefix\":\"/upwind\",\"initialCanonicalUrl\":\"/doc\",\"initialTree\":[\"\",{\"children\":[\"doc\",{\"children\":[\"__PAGE__\",{}]}]},\"$undefined\",\"$undefined\",true],\"initialHead\":[false,\"$L5\"],\"globalErrorComponent\":\"$6\",\"children\":[null,[\"$\",\"html\",null,{\"lang\":\"en\",\"children\":[\"$\",\"body\",null,{\"className\":\"__className_ac7b32\",\"children\":[\"$\",\"$L7\",null,{\"parallelRouterKey\":\"children\",\"segmentPath\":[\"children\"],\"loading\":\"$undefined\",\"loadingStyles\":\"$undefined\",\"loadingScripts\":\"$undefined\",\"hasLoading\":false,\"error\":\"$undefined\",\"errorStyles\":\"$undefined\",\"errorScripts\":\"$undefined\",\"template\":[\"$\",\"$L8\",null,{}],\"templateStyles\":\"$undefined\",\"templateScripts\":\"$undefined\",\"notFound\":[[\"$\",\"title\",null,{\"children\":\"404: This page could not be found.\"}],[\"$\",\"div\",null,{\"style\":{\"fontFamily\":\"system-ui,\\\"Segoe UI\\\",Roboto,Helvetica,Arial,sans-serif,\\\"Apple Color Emoji\\\",\\\"Segoe UI Emoji\\\"\",\"height\":\"100vh\",\"textAlign\":\"center\",\"display\":\"flex\",\"flexDirection\":\"column\",\"alignItems\":\"center\",\"justifyContent\":\"center\"},\"children\":[\"$\",\"div\",null,{\"children\":[[\"$\",\"style\",null,{\"dangerouslySetInnerHTML\":{\"__html\":\"body{color:#000;background:#fff;margin:0}.next-error-h1{border-right:1px solid rgba(0,0,0,.3)}@media (prefers-color-scheme:dark){body{color:#fff;background:#000}.next-error-h1{border-right:1px solid rgba(255,255,255,.3)}}\"}}],[\"$\",\"h1\",null,{\"className\":\"next-error-h1\",\"style\":{\"display\":\"inline-block\",\"margin\":\"0 20px 0 0\",\"padding\":\"0 23px 0 0\",\"fontSize\":24,\"fontWeight\":500,\"verticalAlign\":\"top\",\"lineHeight\":\"49px\"},\"children\":\"404\"}],[\"$\",\"div\",null,{\"style\":{\"display\":\"inline-block\"},\"children\":[\"$\",\"h2\",null,{\"style\":{\"fontSize\":14,\"fontWeight\":400,\"lineHeight\":\"49px\",\"margin\":0},\"children\":\"This page could not be found.\"}]}]]}]}]],\"notFoundStyles\":[],\"initialChildNode\":[\"$\",\"$L7\",null,{\"parallelRouterKey\":\"children\",\"segmentPath\":[\"children\",\"doc\",\"children\"],\"loading\":\"$undefined\",\"loadingStyles\":\"$undefined\",\"loadingScripts\":\"$undefined\",\"hasLoading\":false,\"error\":\"$undefined\",\"errorStyles\":\"$undefined\",\"errorScripts\":\"$undefined\",\"template\":[\"$\",\"$L8\",null,{}],\"templateStyles\":\"$undefined\",\"templateScripts\":\"$undefined\",\"notFound\":\"$undefined\",\"notFoundStyles\":\"$undefined\",\"initialChildNode\":[\"$L9\",[\"$\",\"$La\",null,{\"propsForComponent\":{\"params\":{}},\"Component\":\"$b\",\"isStaticGeneration\":true}],null],\"childPropSegment\":\"__PAGE__\",\"styles\":null}],\"childPropSegment\":\"doc\",\"styles\":null}]}]}],null]}]]\n"])</script><script>self.__next_f.push([1,"5:[[\"$\",\"meta\",\"0\",{\"name\":\"viewport\",\"content\":\"width=device-width, initial-scale=1\"}],[\"$\",\"meta\",\"1\",{\"charSet\":\"utf-8\"}],[\"$\",\"title\",\"2\",{\"children\":\"upwind\"}],[\"$\",\"meta\",\"3\",{\"name\":\"description\",\"content\":\"stove venting automation\"}],[\"$\",\"link\",\"4\",{\"rel\":\"icon\",\"href\":\"/upwind/favicon.ico\",\"type\":\"image/x-icon\",\"sizes\":\"16x16\"}],[\"$\",\"meta\",\"5\",{\"name\":\"next-size-adjust\"}]]\n9:null\n"])</script><script>self.__next_f.push([1,""])</script></body></html>

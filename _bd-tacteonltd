@@ -1,0 +1,12 @@
+echo "build upwind, tarball for production --> https://www.tacteonltd.com/upwind"
+echo "BUILDING NEXTJS..."
+npm run build
+rm -Rf ./upwind/*
+echo "COPYING ./out TO ./upwind..."
+rsync -rI ./out/* ./upwind/
+TIMESTAMP=$( date "+%Y-%m-%d-%H" )
+
+tar --no-xattrs -cf ~/$TIMESTAMP-upwind.tar upwind
+echo "                              +------------------------------------------------+"
+echo "writing production artifact : | ~/$TIMESTAMP-upwind.tar |"
+echo "                              +------------------------------------------------+"
